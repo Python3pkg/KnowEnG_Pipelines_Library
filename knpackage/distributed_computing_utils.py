@@ -21,7 +21,7 @@ def generate_compute_clusters(cluster_ip_addresses, func_name, dependency_list):
 
     try:
         cluster_list = []
-        range_list = range(0, len(cluster_ip_addresses))
+        range_list = list(range(0, len(cluster_ip_addresses)))
 
         for i in range_list:
             cur_cluster = dispy.JobCluster(func_name,
@@ -31,7 +31,7 @@ def generate_compute_clusters(cluster_ip_addresses, func_name, dependency_list):
             cluster_list.append(cur_cluster)
         return cluster_list
     except:
-        print("Unexpected error: {}".format(sys.exc_info()))
+        print(("Unexpected error: {}".format(sys.exc_info())))
         raise
 
 
@@ -50,15 +50,15 @@ def create_cluster_worker(cluster, i, *args_to_func):
     '''
     import sys
 
-    print("Start creating clusters {}.....".format(str(i)))
+    print(("Start creating clusters {}.....".format(str(i))))
     try:
-        print("Length of passing arguments = {}".format(len(args_to_func)))
+        print(("Length of passing arguments = {}".format(len(args_to_func))))
         job = cluster.submit(*args_to_func)
         job.id = i
         ret = job()
-        print(ret, job.stdout, job.stderr, job.exception, job.ip_addr, job.start_time, job.end_time)
+        print((ret, job.stdout, job.stderr, job.exception, job.ip_addr, job.start_time, job.end_time))
     except:
-        print("Unexpected error: {}".format(sys.exc_info()))
+        print(("Unexpected error: {}".format(sys.exc_info())))
         raise
 
 
@@ -80,7 +80,7 @@ def parallel_submitting_job_to_each_compute_node(cluster_list, number_of_jobs_ea
 
     thread_list = []
     received_args = tuple(arguments)
-    print("Start spawning {} threads.....".format(len(cluster_list)))
+    print(("Start spawning {} threads.....".format(len(cluster_list))))
     try:
         for i in range(len(cluster_list)):
             compute_func_args = received_args + (number_of_jobs_each_node[i],)
@@ -97,7 +97,7 @@ def parallel_submitting_job_to_each_compute_node(cluster_list, number_of_jobs_ea
         for cluster in cluster_list:
             cluster.close()
     except:
-        print("Unexpected error: {}".format(sys.exc_info()))
+        print(("Unexpected error: {}".format(sys.exc_info())))
         raise
 
 
@@ -151,7 +151,7 @@ def determine_job_number_on_each_compute_node(number_of_bootstraps, number_of_co
         for i in range(number_of_compute_nodes):
             number_of_scheduled_jobs.append(number_of_jobs_on_single_node)
 
-    print("number_of_scheduled_jobs across clusters : {}".format(number_of_scheduled_jobs))
+    print(("number_of_scheduled_jobs across clusters : {}".format(number_of_scheduled_jobs)))
     return number_of_scheduled_jobs
 
 
@@ -247,7 +247,7 @@ def zip_parameters(*args):
     index_before_last = len(args_list) - 1
     args_list[0:index_before_last] = [itertools.repeat(arg) for arg in args_list[0:index_before_last]]
 
-    return zip(*args_list)
+    return list(zip(*args_list))
 
 
 def execute_distribute_computing_job(cluster_ip_address_list, number_of_bootstraps, func_args, dist_main_function,
@@ -268,7 +268,7 @@ def execute_distribute_computing_job(cluster_ip_address_list, number_of_bootstra
 
     # determine number of compute nodes to use
     number_of_comptue_nodes = determine_number_of_compute_nodes(cluster_ip_address_list, number_of_bootstraps)
-    print("Number of compute nodes = {}".format(number_of_comptue_nodes))
+    print(("Number of compute nodes = {}".format(number_of_comptue_nodes)))
 
     # create clusters
     cluster_list = generate_compute_clusters(

@@ -74,8 +74,8 @@ def get_spreadsheet_df(spreadsheet_name_full_path):
     try:
         spreadsheet_df = pd.read_csv(spreadsheet_name_full_path, sep='\t', header=0, index_col=0)
     except IOError:
-        print("Unexpected error during reading input file {}: {}".format(spreadsheet_name_full_path,
-                                                                         sys.exc_info()[0]))
+        print(("Unexpected error during reading input file {}: {}".format(spreadsheet_name_full_path,
+                                                                         sys.exc_info()[0])))
         raise
 
     return spreadsheet_df
@@ -93,7 +93,7 @@ def get_network_df(network_name):
     try:
         network_df = pd.read_csv(network_name, header=None, names=None, delimiter='\t', usecols=[0, 1, 2])
     except IOError:
-        print("Unexpected error during reading input file {}: {}".format(network_name, sys.exc_info()[0]))
+        print(("Unexpected error during reading input file {}: {}".format(network_name, sys.exc_info()[0])))
         raise
 
     network_df.columns = ['node_1', 'node_2', 'wt']
@@ -213,7 +213,7 @@ def create_node_names_dict(node_names, start_value=0):
         node_names_dictionary: python dictionary of gene names to integer locations
     """
     index_length = len(list(node_names)) + start_value
-    node_names_dictionary = dict(zip(node_names, np.arange(start_value, index_length)))
+    node_names_dictionary = dict(list(zip(node_names, np.arange(start_value, index_length))))
 
     return node_names_dictionary
 
@@ -228,7 +228,7 @@ def create_reverse_node_names_dict(dictionary):
         reverse dictionary: dictionary.
     """
 
-    return {value: key for key, value in dictionary.items()}
+    return {value: key for key, value in list(dictionary.items())}
 
 
 def symmetrize_df(network):
